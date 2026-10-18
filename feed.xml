@@ -2,14 +2,14 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Zane-Cody&apos;s Hoard</title>
-    <link>https://yuzhiboyao015-lgtm.github.io/</link>
+    <link>http://127.0.0.1:4321/</link>
     <description>一个穿梭于 3D 艺术、代码空洞与能源应用的学者。业余玩点摄影，搞搞合成，写写插件。脑子一热就喜欢做点“无聊”的项目。懒虫一枚，研究如何让自己能合理偷懒。我相信 AI 是一次文艺复兴，并不是工业革命。欢迎来到 AGI 时代。</description>
     <language>zh-CN</language>
-    <atom:link href="https://yuzhiboyao015-lgtm.github.io/feed.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://127.0.0.1:4321/feed.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>手感：一套动效参数表和三次翻车记录</title>
-      <link>https://yuzhiboyao015-lgtm.github.io/posts/2026-10-18-touch-and-feel/</link>
-      <guid isPermaLink="true">https://yuzhiboyao015-lgtm.github.io/posts/2026-10-18-touch-and-feel/</guid>
+      <link>http://127.0.0.1:4321/posts/2026-10-18-touch-and-feel/</link>
+      <guid isPermaLink="true">http://127.0.0.1:4321/posts/2026-10-18-touch-and-feel/</guid>
       <description>切页时的卡片起伏、跑马灯的错位、3D 场景嵌页的缩放——所有让人觉得&quot;顺手&quot;的东西都是参数堆出来的。这篇把参数、帧率和翻车现场都摊开。</description>
       <pubDate>Sun, 18 Oct 2026 00:00:00 GMT</pubDate>
       <category>设计</category>
@@ -18,8 +18,8 @@
     </item>
     <item>
       <title>九千行代码，七千行样式：一份建站工程账</title>
-      <link>https://yuzhiboyao015-lgtm.github.io/posts/2026-10-16-engineering-ledger/</link>
-      <guid isPermaLink="true">https://yuzhiboyao015-lgtm.github.io/posts/2026-10-16-engineering-ledger/</guid>
+      <link>http://127.0.0.1:4321/posts/2026-10-16-engineering-ledger/</link>
+      <guid isPermaLink="true">http://127.0.0.1:4321/posts/2026-10-16-engineering-ledger/</guid>
       <description>把九天里写下的每一行摊开算一遍——代码规模、提交分布、为什么样式文件会长到七千行、为什么依赖只有十一个，以及一次静态构建要多久。</description>
       <pubDate>Fri, 16 Oct 2026 00:00:00 GMT</pubDate>
       <category>建站</category>
@@ -28,8 +28,8 @@
     </item>
     <item>
       <title>这个小屋是怎么搭起来的</title>
-      <link>https://yuzhiboyao015-lgtm.github.io/posts/how-this-site-was-built/</link>
-      <guid isPermaLink="true">https://yuzhiboyao015-lgtm.github.io/posts/how-this-site-was-built/</guid>
+      <link>http://127.0.0.1:4321/posts/how-this-site-was-built/</link>
+      <guid isPermaLink="true">http://127.0.0.1:4321/posts/how-this-site-was-built/</guid>
       <description>从选型到上线：为什么用 Next.js 16 静态导出、为什么内容用 Markdown、毛玻璃效果具体怎么做的。</description>
       <pubDate>Sun, 11 Oct 2026 00:00:00 GMT</pubDate>
       <category>建站</category>
@@ -37,8 +37,8 @@
     </item>
     <item>
       <title>照片墙的瀑布流是 CSS 做的，一行 JS 都没有</title>
-      <link>https://yuzhiboyao015-lgtm.github.io/posts/css-masonry-gallery/</link>
-      <guid isPermaLink="true">https://yuzhiboyao015-lgtm.github.io/posts/css-masonry-gallery/</guid>
+      <link>http://127.0.0.1:4321/posts/css-masonry-gallery/</link>
+      <guid isPermaLink="true">http://127.0.0.1:4321/posts/css-masonry-gallery/</guid>
       <description>用 CSS 多栏（columns）实现混合宽高比的照片墙，比 JavaScript 算位置简单得多，而且不会有一帧的跳动。</description>
       <pubDate>Thu, 08 Oct 2026 00:00:00 GMT</pubDate>
       <category>CSS</category>
