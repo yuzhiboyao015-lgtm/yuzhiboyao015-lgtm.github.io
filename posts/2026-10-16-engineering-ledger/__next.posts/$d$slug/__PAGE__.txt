@@ -1,0 +1,169 @@
+2:"$Sreact.fragment"
+3:"/_next/static/chunks/29-jnpd0sx46j.js"
+4:"/_next/static/chunks/1enfzvprn6ufv.js"
+5:I[39756,["$3","$4"],"default"]
+6:I[37457,["$3","$4"],"default"]
+d:"/_next/static/chunks/3jplpfe506-37.js"
+e:I[56253,["$3","$4","$d"],"default"]
+f:I[22016,["$3","$4","$d"],""]
+16:"ViewportBoundary"
+17:I[97367,["$3","$4"],"$16"]
+18:"MetadataBoundary"
+19:I[97367,["$3","$4"],"$18"]
+1a:"$Sreact.suspense"
+1b:I[27201,["$3","$4"],"IconMark"]
+8:X
+8:C
+9:X
+10:T17b5,<p>站是做出来的，不是想出来的。但这篇不谈审美，只算账——把所有能数清楚的东西数一遍。数字不会撒谎，它们会告诉你时间到底花在哪儿了。</p>
+<h2 id="一总量">一、总量</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>数值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>提交次数</td>
+<td>225</td>
+</tr>
+<tr>
+<td>自己写的代码</td>
+<td>9,666 行（<code>.ts</code> / <code>.tsx</code>）</td>
+</tr>
+<tr>
+<td>其中 React 组件与页面</td>
+<td>8,095 行</td>
+</tr>
+<tr>
+<td>样式</td>
+<td>7,232 行（单个 <code>globals.css</code>）</td>
+</tr>
+<tr>
+<td>第三方依赖</td>
+<td>11 个</td>
+</tr>
+<tr>
+<td>页面</td>
+<td>17 个 <code>page.tsx</code></td>
+</tr>
+<tr>
+<td>构建产物</td>
+<td>23 个路由（含 sitemap、feed），写成此文后是 27</td>
+</tr>
+<tr>
+<td>全量构建耗时</td>
+<td>约 3.5 秒</td>
+</tr>
+</tbody>
+</table>
+<p>第一眼能看出来的怪事在这里：<strong>样式行数已经接近代码行数的四分之三</strong>。</p>
+<h2 id="二提交的分布">二、提交的分布</h2>
+<pre><code>10-11  ██                            9
+10-12  █                             1
+10-13  ████                         15
+10-14  ██████                       21
+10-15  █████████                    35
+10-16  ████████████                 44
+10-17  ██████████████████████████   97
+10-18  █                             3
+</code></pre>
+<p>一共八天有记录。<strong>三分之一的提交集中在同一天</strong>，那天在重做照片墙和页脚。</p>
+<p>这说明一件不太好听的事：<strong>前期我在"想"，后期我在"改"</strong>。真正把东西做对的那部分工作，全堆在曲线的尾部。</p>
+<h2 id="三为什么样式会变成七千行">三、为什么样式会变成七千行</h2>
+<p>因为它被当作<strong>施工日志</strong>在用。</p>
+<p>一个文件里同时住着：设计变量（颜色、间距、毛玻璃参数）、基础排版、每个页面的私有布局、以及一百多处"覆盖某条规则"的补丁。</p>
+<p>举例：<code>.post-shell</code> 这一段被改过十几遍，因为每加一个页面就要重新调它的内边距；<code>.about-name</code> 这个类在文件里出现了两次，第二次是覆盖第一次的。</p>
+<p>坏处很明显：<strong>改一处要靠搜索确认没有副作用</strong>。好处也有：所有样式在一屏之内可查，不用在十几个模块之间跳来跳去。这是个权衡，不是我没想过拆。</p>
+<h2 id="四体量最大的五个组件">四、体量最大的五个组件</h2>
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>行数</th>
+<th>干什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>LeafLayer.tsx</code></td>
+<td>1,228</td>
+<td>竹叶、太极、毛笔字，一块 canvas 全包</td>
+</tr>
+<tr>
+<td><code>GalleryGrid.tsx</code></td>
+<td>489</td>
+<td>瀑布流、灯箱、缩放拖拽、视频卡</td>
+</tr>
+<tr>
+<td><code>HeroParticles.tsx</code></td>
+<td>381</td>
+<td>首屏星尘</td>
+</tr>
+<tr>
+<td><code>MusicProvider.tsx</code></td>
+<td>360</td>
+<td>播放状态、队列、跨页不断播</td>
+</tr>
+<tr>
+<td><code>ArchiveExplorer.tsx</code></td>
+<td>342</td>
+<td>归档的搜索、筛选、时间轴</td>
+</tr>
+</tbody>
+</table>
+<p>排第一那个组件，占全部组件代码的 15%，干的却只是"背景里飘点东西"。<strong>氛围类的东西最容易失控</strong>：因为它没有明确的对错，只有"再飘一点会不会更好"。</p>
+<h2 id="五依赖为什么只有十一个">五、依赖为什么只有十一个</h2>
+<pre><code>next  react  react-dom
+unified  remark-parse  remark-gfm  remark-rehype  rehype-stringify  rehype-slug
+@shikijs/rehype  gray-matter
+</code></pre>
+<p>除了 Next 和 React 这一套，剩下全是<strong>把 Markdown 变成 HTML</strong> 的流水线：解析、扩展语法、转 HTML、给标题加锚点、给代码上色，最后一件事交给 <code>gray-matter</code> 读前言。</p>
+<p>没有一个图标库——图标是手写的内联 SVG；没有一个动画库——动效是 CSS 关键帧；没有一个 UI 组件库——所有卡片都是自己写的 <code>div</code>。</p>
+<p>这不是"极简主义"，是算术：<strong>每多一个依赖，就多一个人可以在半夜改坏你的站</strong>，也多一份要跟着升级的东西。</p>
+<h2 id="六静态导出的账">六、静态导出的账</h2>
+<p>构建是 <code>next build</code> + <code>output: "export"</code>，产物是一堆纯文件。这带来几笔很清楚的账：</p>
+<p><strong>赚的：</strong></p>
+<ul>
+<li>不需要服务器进程，也不怕它挂</li>
+<li>全站没有一次数据库查询</li>
+<li>页面是预渲染的 HTML，首屏不需要等 JS</li>
+</ul>
+<p><strong>付的：</strong></p>
+<ul>
+<li>没有服务端，就没有「实时」。所有内容改动都要重新构建</li>
+<li>图片优化服务不可用，照片墙只能用原图（所以压缩必须在上传前做完）</li>
+<li>预取的 RSC 请求在静态站上会拿到 404——无伤大雅，但控制台不太好看</li>
+</ul>
+<p>最后这笔账我认了。<strong>一个不会生病的小屋，值得放弃一点实时性</strong>。</p>
+<h2 id="七所以时间花在哪儿了">七、所以时间花在哪儿了</h2>
+<p>如果把 9,666 行和 7,232 行加起来，再除以九天，大概是每天两千行。这个数字毫无意义——因为删掉的行没被统计进去。</p>
+<p>真实的时间分配更接近这样：</p>
+<pre><code>重新构想版式   ████████████████
+调数值         ████████████
+写新功能       ████████
+修 bug         ██████
+写内容         ████
+</code></pre>
+<p><strong>最多的时间花在"把已经能跑的东西推倒重来"上</strong>。</p>
+<p>这也解释了为什么提交曲线那么抖：不是我在加速，是我在不断否定前面的自己。</p>c:[["children",{"s":"__PAGE__","h":160,"d":{"r":["$","$2","c",{"children":[["$","$Le",null,{"children":[["$","div",null,{"className":"page-band","aria-hidden":"true"}],["$","article",null,{"className":"post-layout mx-auto w-full","children":[["$","div",null,{"className":"post-shell","children":[["$","$Lf",null,{"href":"/archive","className":"chip","children":[["$","svg",null,{"width":13,"height":13,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":1.7,"strokeLinecap":"round","strokeLinejoin":"round","aria-hidden":"true","children":["$","path",null,{"d":"m15 6-6 6 6 6"}]}],"回到归档"]}],null,["$","h1",null,{"className":"mt-7 text-3xl font-bold leading-snug tracking-tight sm:text-4xl","children":["$","span",null,{"className":"text-gradient","children":"九千行代码，七千行样式：一份建站工程账"}]}],["$","div",null,{"className":"mt-4 flex flex-wrap items-center gap-x-3 gap-y-2 text-xs text-ink-faint","children":[["$","span",null,{"className":"flex items-center gap-1.5","children":[["$","svg",null,{"width":13,"height":13,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":1.7,"strokeLinecap":"round","strokeLinejoin":"round","aria-hidden":"true","children":["$","path",null,{"d":"M8 3v4m8-4v4M3 9h18M5 5h14v16H5z"}]}],["$","time",null,{"dateTime":"2026-10-16T00:00:00.000Z","children":"2026-10-16"}]]}],["$","span",null,{"className":"flex items-center gap-1.5","children":[["$","svg",null,{"width":13,"height":13,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":1.7,"strokeLinecap":"round","strokeLinejoin":"round","aria-hidden":"true","children":["$","path",null,{"d":"M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0-13v5l3 2"}]}],4," 分钟"]}],null,[["$","span","建站",{"className":"chip !py-0 !text-[0.68rem]","children":["#","建站"]}],["$","span","Next.js",{"className":"chip !py-0 !text-[0.68rem]","children":["#","Next.js"]}],["$","span","工程",{"className":"chip !py-0 !text-[0.68rem]","children":["#","工程"]}]]]}],["$","p",null,{"className":"mt-6 border-l-2 border-cinnabar/60 pl-4 text-[0.95rem] leading-relaxed text-ink-dim","children":"把九天里写下的每一行摊开算一遍——代码规模、提交分布、为什么样式文件会长到七千行、为什么依赖只有十一个，以及一次静态构建要多久。"}],["$","div",null,{"className":"prose","dangerouslySetInnerHTML":{"__html":"$10"}}]]}],"$L11","$L12"]}]]}],["$L13"],"$L14"]}],"p":"$@15","v":null,"s":"$9"}}]]
+a:[["children",{"s":{"n":"slug","t":"d","k":"2026-10-16-engineering-ledger","s":[]},"h":96,"d":{"r":["$","$2","c",{"children":[null,["$","$L5",null,{"parallelRouterKey":"children","template":["$","$L6",null,{}]}]]}],"p":"$@b","v":"$8","s":"$9"},"c":"$Qc"}]]
+1:[["children",{"s":"posts","h":64,"d":{"r":["$","$2","c",{"children":[null,["$","$L5",null,{"parallelRouterKey":"children","template":["$","$L6",null,{}]}]]}],"p":"$@7","v":"$8","s":"$9"},"c":"$Qa"}]]
+0:{"t":{"t":{"s":"","h":16,"c":"$Q1"},"h":{"r":["$","$2","h",{"children":[null,["$","$L17",null,{"children":[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]}],["$","$L19",null,{"children":[["$","div",null,{"hidden":true,"children":["$","$1a",null,{"name":"Next.Metadata","children":[["$","title","0",{"children":"九千行代码，七千行样式：一份建站工程账 · Zane-Cody's Hoard"}],["$","meta","1",{"name":"description","content":"把九天里写下的每一行摊开算一遍——代码规模、提交分布、为什么样式文件会长到七千行、为什么依赖只有十一个，以及一次静态构建要多久。"}],["$","meta","2",{"name":"application-name","content":"Zane-Cody's Hoard"}],["$","meta","3",{"name":"author","content":"Cody"}],["$","link","4",{"rel":"alternate","type":"application/rss+xml","href":"https://yuzhiboyao015-lgtm.github.io/feed.xml"}],["$","meta","5",{"property":"og:title","content":"九千行代码，七千行样式：一份建站工程账"}],["$","meta","6",{"property":"og:description","content":"把九天里写下的每一行摊开算一遍——代码规模、提交分布、为什么样式文件会长到七千行、为什么依赖只有十一个，以及一次静态构建要多久。"}],["$","meta","7",{"property":"og:type","content":"article"}],["$","meta","8",{"name":"twitter:card","content":"summary_large_image"}],["$","meta","9",{"name":"twitter:title","content":"九千行代码，七千行样式：一份建站工程账"}],["$","meta","10",{"name":"twitter:description","content":"把九天里写下的每一行摊开算一遍——代码规模、提交分布、为什么样式文件会长到七千行、为什么依赖只有十一个，以及一次静态构建要多久。"}],["$","link","11",{"rel":"icon","href":"/icon.svg?icon.3xzy_oe-13hn3.svg","sizes":"any","type":"image/svg+xml"}],["$","$L1b","12",{}]]}]}],null]}],null]}],"p":"$@1c","v":null,"s":"$9"}},"a":"$@1d","u":"$@1e","b":"egG6pgDPsEPbPy0I5wCXT"}
+1f:I[46311,["$3","$4","$d"],"default"]
+20:I[97367,["$3","$4"],"OutletBoundary"]
+11:["$","aside",null,{"className":"post-toc xl:sticky xl:top-24","children":["$","$L1f",null,{"headings":[{"depth":2,"id":"一总量","text":"一、总量"},{"depth":2,"id":"二提交的分布","text":"二、提交的分布"},{"depth":2,"id":"三为什么样式会变成七千行","text":"三、为什么样式会变成七千行"},{"depth":2,"id":"四体量最大的五个组件","text":"四、体量最大的五个组件"},{"depth":2,"id":"五依赖为什么只有十一个","text":"五、依赖为什么只有十一个"},{"depth":2,"id":"六静态导出的账","text":"六、静态导出的账"},{"depth":2,"id":"七所以时间花在哪儿了","text":"七、所以时间花在哪儿了"}]}]}]
+12:["$","nav",null,{"className":"post-nav grid gap-3 sm:grid-cols-2","aria-label":"上一篇 / 下一篇","children":[["$","$Lf",null,{"href":"/posts/2026-10-18-touch-and-feel/","className":"glass glass-hover px-5 py-4","children":[["$","span",null,{"className":"text-xs text-ink-faint","children":"← 更新的一篇"}],["$","span",null,{"className":"mt-1 block truncate text-sm text-ink","children":"手感：一套动效参数表和三次翻车记录"}]]}],["$","$Lf",null,{"href":"/posts/how-this-site-was-built/","className":"glass glass-hover px-5 py-4 text-right sm:col-start-2","children":[["$","span",null,{"className":"text-xs text-ink-faint","children":"更早的一篇 →"}],["$","span",null,{"className":"mt-1 block truncate text-sm text-ink","children":"这个小屋是怎么搭起来的"}]]}]]}]
+13:["$","script","script-0",{"src":"/_next/static/chunks/3jplpfe506-37.js","async":true}]
+14:["$","$L20",null,{"children":["$","$1a",null,{"name":"Next.MetadataOutlet","children":"$@21"}]}]
+1e:true
+9:300
+21:null
+9:C
+1d:0
+b:"$undefined"
+7:"$undefined"
+1c:"$undefined"
+15:"$undefined"

@@ -1,0 +1,87 @@
+2:"$Sreact.fragment"
+3:"/_next/static/chunks/29-jnpd0sx46j.js"
+4:"/_next/static/chunks/1enfzvprn6ufv.js"
+5:I[39756,["$3","$4"],"default"]
+6:I[37457,["$3","$4"],"default"]
+d:"/_next/static/chunks/3jplpfe506-37.js"
+e:I[56253,["$3","$4","$d"],"default"]
+f:I[22016,["$3","$4","$d"],""]
+16:"ViewportBoundary"
+17:I[97367,["$3","$4"],"$16"]
+18:"MetadataBoundary"
+19:I[97367,["$3","$4"],"$18"]
+1a:"$Sreact.suspense"
+1b:I[27201,["$3","$4"],"IconMark"]
+8:X
+8:C
+9:X
+10:T197c,<p>照片墙里既有横图（1400×900）、竖图（900×1300）也有方图（1100×1100）。要把它们排得好看，通常有两条路：</p>
+<ol>
+<li>用 JavaScript 算出每张图的位置</li>
+<li>让 CSS 自己算</li>
+</ol>
+<p>第二条路只要三行。</p>
+<h2 id="columns-方案">columns 方案</h2>
+<pre class="shiki synthwave-84" style="background-color:#262335;color:#bbbbbb" tabindex="0"><code><span class="line"><span style="color:#FEDE5D">.gallery</span><span style="color:#BBBBBB"> {</span></span>
+<span class="line"><span style="color:#72F1B8">  columns</span><span style="color:#B6B1B1">:</span><span style="color:#F97E72"> 2</span><span style="color:#BBBBBB">;        </span><span style="color:#848BBD;font-style:italic">/* 窄屏两栏 */</span></span>
+<span class="line"><span style="color:#72F1B8">  column-gap</span><span style="color:#B6B1B1">:</span><span style="color:#F97E72"> 0.75rem</span><span style="color:#BBBBBB">;</span></span>
+<span class="line"><span style="color:#BBBBBB">}</span></span>
+<span class="line"><span style="color:#FEDE5D">@media</span><span style="color:#BBBBBB"> (</span><span style="color:#FF7EDB">min-width</span><span style="color:#B6B1B1">:</span><span style="color:#F97E72"> 640px</span><span style="color:#BBBBBB">) {</span></span>
+<span class="line"><span style="color:#FEDE5D">  .gallery</span><span style="color:#BBBBBB"> { </span><span style="color:#72F1B8">columns</span><span style="color:#B6B1B1">:</span><span style="color:#F97E72"> 3</span><span style="color:#BBBBBB">; }</span></span>
+<span class="line"><span style="color:#BBBBBB">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#FEDE5D">.tile</span><span style="color:#BBBBBB"> {</span></span>
+<span class="line"><span style="color:#72F1B8">  break-inside</span><span style="color:#B6B1B1">:</span><span style="color:#FE4450"> avoid</span><span style="color:#BBBBBB">;   </span><span style="color:#848BBD;font-style:italic">/* 关键：别让一张图被拆到两栏 */</span></span>
+<span class="line"><span style="color:#72F1B8">  margin-bottom</span><span style="color:#B6B1B1">:</span><span style="color:#F97E72"> 0.75rem</span><span style="color:#BBBBBB">;</span></span>
+<span class="line"><span style="color:#BBBBBB">}</span></span></code></pre>
+<p>原理是 CSS 多栏布局会把内容按<strong>高度</strong>尽量均匀地分配到各栏里 —— 这正好就是瀑布流想要的效果，不用自己算。</p>
+<p>配上 Tailwind 就是：</p>
+<pre class="shiki synthwave-84" style="background-color:#262335;color:#bbbbbb" tabindex="0"><code><span class="line"><span style="color:#36F9F6">&#x3C;</span><span style="color:#72F1B8">div</span><span style="color:#FEDE5D;font-style:italic"> class</span><span style="color:#B6B1B1">=</span><span style="color:#FF8B39">"gap-3 sm:columns-2 lg:columns-3"</span><span style="color:#36F9F6">></span></span>
+<span class="line"><span style="color:#36F9F6">  &#x3C;</span><span style="color:#72F1B8">button</span><span style="color:#FEDE5D;font-style:italic"> class</span><span style="color:#B6B1B1">=</span><span style="color:#FF8B39">"mb-3 block w-full break-inside-avoid"</span><span style="color:#36F9F6">></span><span style="color:#FFFFFFEE">…</span><span style="color:#36F9F6">&#x3C;/</span><span style="color:#72F1B8">button</span><span style="color:#36F9F6">></span></span>
+<span class="line"><span style="color:#36F9F6">&#x3C;/</span><span style="color:#72F1B8">div</span><span style="color:#36F9F6">></span></span></code></pre>
+<h2 id="为什么不用-js-方案">为什么不用 JS 方案</h2>
+<p>除了少写代码，还有一个不太被提起但很重要的好处：<strong>没有布局跳动</strong>。</p>
+<p>JS 方案必须先渲染一遍、测量、再定位。用户看到的顺序是：</p>
+<pre><code>先看到图片挤成一列  →  突然跳成瀑布流
+</code></pre>
+<p>慢一点或者图多一点的时候，这一下很明显。CSS 方案在首帧就是最终布局，因为它压根没经过"中间状态"。</p>
+<h2 id="宽高比要提前写死">宽高比要提前写死</h2>
+<p>有个前提：每张图必须知道自己的宽高比，否则占位高度是 0，图片加载完会撑开容器、把下面的内容推下去 —— 还是跳。</p>
+<p>所以内容数据里老老实实记了尺寸：</p>
+<pre class="shiki synthwave-84" style="background-color:#262335;color:#bbbbbb" tabindex="0"><code><span class="line"><span style="color:#BBBBBB">{</span></span>
+<span class="line"><span style="color:#72F1B8">  "type"</span><span style="color:#BBBBBB">: </span><span style="color:#FF8B39">"image"</span><span style="color:#BBBBBB">,</span></span>
+<span class="line"><span style="color:#72F1B8">  "src"</span><span style="color:#BBBBBB">: </span><span style="color:#FF8B39">"/media/photos/p11.webp"</span><span style="color:#BBBBBB">,</span></span>
+<span class="line"><span style="color:#72F1B8">  "width"</span><span style="color:#BBBBBB">: </span><span style="color:#F97E72">1400</span><span style="color:#BBBBBB">,</span></span>
+<span class="line"><span style="color:#72F1B8">  "height"</span><span style="color:#BBBBBB">: </span><span style="color:#F97E72">900</span></span>
+<span class="line"><span style="color:#BBBBBB">}</span></span></code></pre>
+<p>渲染时写成：</p>
+<pre class="shiki synthwave-84" style="background-color:#262335;color:#bbbbbb" tabindex="0"><code><span class="line"><span style="color:#36F9F6">&#x3C;</span><span style="color:#72F1B8">button</span><span style="color:#FEDE5D;font-style:italic"> style</span><span style="color:#B6B1B1">=</span><span style="color:#FF8B39">"aspect-ratio: 1400 / 900"</span><span style="color:#36F9F6">></span></span></code></pre>
+<p>容器的高度在第一帧就定死了，图片什么时候加载完都不影响布局。</p>
+<blockquote>
+<p>想让页面不跳，靠的不是"加载得快"，而是"提前知道自己长多高"。</p>
+</blockquote>
+<h2 id="视频也走同一套">视频也走同一套</h2>
+<p>视频元素同样能设置 <code>aspect-ratio</code>，所以图片和视频混在同一个网格里完全不需要特殊处理。视频额外做了两件事：</p>
+<ul>
+<li>缩略图上 <code>muted loop playsInline</code>，鼠标悬停才 <code>play()</code>，移开就暂停并回到开头</li>
+<li>列表里只加载元数据（<code>preload="metadata"</code>），不预加载整个视频文件</li>
+</ul>
+<p>十个视频全预加载的话，页面能有好几十 MB。这种事只能靠克制。</p>c:[["children",{"s":"__PAGE__","h":160,"d":{"r":["$","$2","c",{"children":[["$","$Le",null,{"children":[["$","div",null,{"className":"page-band","aria-hidden":"true"}],["$","article",null,{"className":"post-layout mx-auto w-full","children":[["$","div",null,{"className":"post-shell","children":[["$","$Lf",null,{"href":"/archive","className":"chip","children":[["$","svg",null,{"width":13,"height":13,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":1.7,"strokeLinecap":"round","strokeLinejoin":"round","aria-hidden":"true","children":["$","path",null,{"d":"m15 6-6 6 6 6"}]}],"回到归档"]}],null,["$","h1",null,{"className":"mt-7 text-3xl font-bold leading-snug tracking-tight sm:text-4xl","children":["$","span",null,{"className":"text-gradient","children":"照片墙的瀑布流是 CSS 做的，一行 JS 都没有"}]}],["$","div",null,{"className":"mt-4 flex flex-wrap items-center gap-x-3 gap-y-2 text-xs text-ink-faint","children":[["$","span",null,{"className":"flex items-center gap-1.5","children":[["$","svg",null,{"width":13,"height":13,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":1.7,"strokeLinecap":"round","strokeLinejoin":"round","aria-hidden":"true","children":["$","path",null,{"d":"M8 3v4m8-4v4M3 9h18M5 5h14v16H5z"}]}],["$","time",null,{"dateTime":"2026-10-08T00:00:00.000Z","children":"2026-10-08"}]]}],["$","span",null,{"className":"flex items-center gap-1.5","children":[["$","svg",null,{"width":13,"height":13,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":1.7,"strokeLinecap":"round","strokeLinejoin":"round","aria-hidden":"true","children":["$","path",null,{"d":"M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0-13v5l3 2"}]}],3," 分钟"]}],null,[["$","span","CSS",{"className":"chip !py-0 !text-[0.68rem]","children":["#","CSS"]}],["$","span","设计",{"className":"chip !py-0 !text-[0.68rem]","children":["#","设计"]}]]]}],["$","p",null,{"className":"mt-6 border-l-2 border-cinnabar/60 pl-4 text-[0.95rem] leading-relaxed text-ink-dim","children":"用 CSS 多栏（columns）实现混合宽高比的照片墙，比 JavaScript 算位置简单得多，而且不会有一帧的跳动。"}],["$","div",null,{"className":"prose","dangerouslySetInnerHTML":{"__html":"$10"}}]]}],"$L11","$L12"]}]]}],["$L13"],"$L14"]}],"p":"$@15","v":null,"s":"$9"}}]]
+a:[["children",{"s":{"n":"slug","t":"d","k":"css-masonry-gallery","s":[]},"h":96,"d":{"r":["$","$2","c",{"children":[null,["$","$L5",null,{"parallelRouterKey":"children","template":["$","$L6",null,{}]}]]}],"p":"$@b","v":"$8","s":"$9"},"c":"$Qc"}]]
+1:[["children",{"s":"posts","h":64,"d":{"r":["$","$2","c",{"children":[null,["$","$L5",null,{"parallelRouterKey":"children","template":["$","$L6",null,{}]}]]}],"p":"$@7","v":"$8","s":"$9"},"c":"$Qa"}]]
+0:{"t":{"t":{"s":"","h":16,"c":"$Q1"},"h":{"r":["$","$2","h",{"children":[null,["$","$L17",null,{"children":[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]}],["$","$L19",null,{"children":[["$","div",null,{"hidden":true,"children":["$","$1a",null,{"name":"Next.Metadata","children":[["$","title","0",{"children":"照片墙的瀑布流是 CSS 做的，一行 JS 都没有 · Zane-Cody's Hoard"}],["$","meta","1",{"name":"description","content":"用 CSS 多栏（columns）实现混合宽高比的照片墙，比 JavaScript 算位置简单得多，而且不会有一帧的跳动。"}],["$","meta","2",{"name":"application-name","content":"Zane-Cody's Hoard"}],["$","meta","3",{"name":"author","content":"Cody"}],["$","link","4",{"rel":"alternate","type":"application/rss+xml","href":"https://yuzhiboyao015-lgtm.github.io/feed.xml"}],["$","meta","5",{"property":"og:title","content":"照片墙的瀑布流是 CSS 做的，一行 JS 都没有"}],["$","meta","6",{"property":"og:description","content":"用 CSS 多栏（columns）实现混合宽高比的照片墙，比 JavaScript 算位置简单得多，而且不会有一帧的跳动。"}],["$","meta","7",{"property":"og:type","content":"article"}],["$","meta","8",{"name":"twitter:card","content":"summary_large_image"}],["$","meta","9",{"name":"twitter:title","content":"照片墙的瀑布流是 CSS 做的，一行 JS 都没有"}],["$","meta","10",{"name":"twitter:description","content":"用 CSS 多栏（columns）实现混合宽高比的照片墙，比 JavaScript 算位置简单得多，而且不会有一帧的跳动。"}],["$","link","11",{"rel":"icon","href":"/icon.svg?icon.3xzy_oe-13hn3.svg","sizes":"any","type":"image/svg+xml"}],["$","$L1b","12",{}]]}]}],null]}],null]}],"p":"$@1c","v":null,"s":"$9"}},"a":"$@1d","u":"$@1e","b":"egG6pgDPsEPbPy0I5wCXT"}
+1f:I[46311,["$3","$4","$d"],"default"]
+20:I[97367,["$3","$4"],"OutletBoundary"]
+11:["$","aside",null,{"className":"post-toc xl:sticky xl:top-24","children":["$","$L1f",null,{"headings":[{"depth":2,"id":"columns-方案","text":"columns 方案"},{"depth":2,"id":"为什么不用-js-方案","text":"为什么不用 JS 方案"},{"depth":2,"id":"宽高比要提前写死","text":"宽高比要提前写死"},{"depth":2,"id":"视频也走同一套","text":"视频也走同一套"}]}]}]
+12:["$","nav",null,{"className":"post-nav grid gap-3 sm:grid-cols-2","aria-label":"上一篇 / 下一篇","children":[["$","$Lf",null,{"href":"/posts/how-this-site-was-built/","className":"glass glass-hover px-5 py-4","children":[["$","span",null,{"className":"text-xs text-ink-faint","children":"← 更新的一篇"}],["$","span",null,{"className":"mt-1 block truncate text-sm text-ink","children":"这个小屋是怎么搭起来的"}]]}],["$","span",null,{}]]}]
+13:["$","script","script-0",{"src":"/_next/static/chunks/3jplpfe506-37.js","async":true}]
+14:["$","$L20",null,{"children":["$","$1a",null,{"name":"Next.MetadataOutlet","children":"$@21"}]}]
+1e:true
+9:300
+21:null
+9:C
+1d:0
+b:"$undefined"
+7:"$undefined"
+1c:"$undefined"
+15:"$undefined"

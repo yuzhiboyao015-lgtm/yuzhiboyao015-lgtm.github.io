@@ -1,0 +1,106 @@
+2:"$Sreact.fragment"
+3:"/_next/static/chunks/29-jnpd0sx46j.js"
+4:"/_next/static/chunks/1enfzvprn6ufv.js"
+5:I[39756,["$3","$4"],"default"]
+6:I[37457,["$3","$4"],"default"]
+d:"/_next/static/chunks/15o3i4r9clpzu.js"
+e:I[56253,["$3","$4","$d"],"default"]
+f:I[22016,["$3","$4","$d"],""]
+16:"ViewportBoundary"
+17:I[97367,["$3","$4"],"$16"]
+18:"MetadataBoundary"
+19:I[97367,["$3","$4"],"$18"]
+1a:"$Sreact.suspense"
+1b:I[27201,["$3","$4"],"IconMark"]
+8:X
+8:C
+9:X
+10:Tf9c,<h1 id="第九天">第九天</h1>
+<p>第九天了。</p>
+<p>我给这个站定过一个模糊的终点：<strong>等它不再需要我解释的时候，就算做完了</strong>。今天打开它，从头点到尾，居然真的没什么想改的了。那就收工吧。</p>
+<h2 id="一九天的形状">一、九天的形状</h2>
+<p>我把提交记录拉出来数了一遍，一共 <strong>225 次</strong>。按天排开是这样的（一个方块约等于一次提交）：</p>
+<pre><code>10-11  ██                            9
+10-12  █                             1
+10-13  ████                         15
+10-14  ██████                       21
+10-15  █████████                    35
+10-16  ████████████                 44
+10-17  ██████████████████████████   97
+10-18  █                             3
+</code></pre>
+<p>中间那天的一根柱子（97 次）不是勤奋，是<strong>反复推倒</strong>。照片墙的排版、光标的颜色、页脚那句话，都在那天被改过很多遍。做东西的曲线从来不是平滑的，是一段一段的痉挛。</p>
+<h2 id="二留下和删掉的">二、留下和删掉的</h2>
+<p>这几天真正花时间的地方，大部分最后看不见——因为它们被我删了。</p>
+<p><strong>删掉的：</strong></p>
+<ul>
+<li>一整套「渲染」页面，做完、截图、发出去，第二天觉得多余，整个目录铲掉，视频挪进照片墙。</li>
+<li>一个 4K 的黄昏小屋场景，我自己手写的第一版。后来看到一个更好的实现，乖乖把自己那版删了。</li>
+<li>两张法阵视频卡、一段 675 MB 的母版、一堆一次性脚本。</li>
+<li>竹叶会上浮在照片上的那个 bug——它让我明白"层级"这个词在 CSS 里有多不讲道理。</li>
+</ul>
+<p><strong>留下的：</strong></p>
+<table>
+<thead>
+<tr>
+<th>留下的是什么</th>
+<th>数字</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>页面</td>
+<td>17 个</td>
+</tr>
+<tr>
+<td>自己写的代码</td>
+<td>9,666 行（TS / TSX）</td>
+</tr>
+<tr>
+<td>样式</td>
+<td>7,232 行 CSS，改过 146 次</td>
+</tr>
+<tr>
+<td>第三方依赖</td>
+<td>11 个</td>
+</tr>
+<tr>
+<td>文章 / 闲话 / 动态 / 项目</td>
+<td>2 / 3 / 3 / 4</td>
+</tr>
+<tr>
+<td>照片 / 音乐</td>
+<td>30 张（含 4 段视频） / 17 首</td>
+</tr>
+</tbody>
+</table>
+<p>依赖只有 11 个这件事，我挺得意的。不是苦行，是<strong>每多一个依赖，就多一个人可以在半夜改坏你的站</strong>。</p>
+<h2 id="三这九天到底在追什么">三、这九天到底在追什么</h2>
+<p>一开始我以为是在追"好看"。</p>
+<p>后来发现不是。好看是结果，我在追的是<strong>一致</strong>：所有光影朝一个方向，所有圆角是一套数，所有动画用同一条缓动曲线，朱红只出现在"当前"，别的地方一律是星光的蓝。</p>
+<p>一个站好看，往往不是因为某个地方特别漂亮，而是因为没有一处突然不对劲。反过来，一处不对，整页都会显得廉价。</p>
+<p>而这件事没有捷径，只能一遍一遍地看。所以那 146 次对 CSS 的改动，本质上都是同一句话：<strong>差一点，再看一眼</strong>。</p>
+<h2 id="四关于结束">四、关于结束</h2>
+<p>"结束这段旅程"这个说法，我以前觉得有点做作。但今天确实有这个感觉。</p>
+<p>九天的东西摊在眼前：一间会转的小屋、一面会动的照片墙、一堆按年份排好的旧事。它们不会自己长出来，也不会自己变好——<strong>它们只是从今天开始，停在这儿了</strong>。</p>
+<p>之后大概还会往里面塞东西：新的照片、新的碎碎念、可能还有新的场景。但那不叫"继续做站"，那叫"住进去"。</p>
+<p>站是我修的，接下来该我住了。</p>
+<hr>
+<p>写到这里，窗外天已经亮了。屋子还是那个屋子，灯还亮着。</p>c:[["children",{"s":"__PAGE__","h":160,"d":{"r":["$","$2","c",{"children":[["$","$Le",null,{"children":[["$","div",null,{"className":"page-band","aria-hidden":"true"}],["$","article",null,{"className":"post-shell chatter-article mx-auto max-w-3xl","children":[["$","$Lf",null,{"href":"/chatter","className":"chip","children":[["$","svg",null,{"width":13,"height":13,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":1.7,"strokeLinecap":"round","strokeLinejoin":"round","aria-hidden":"true","children":["$","path",null,{"d":"m15 6-6 6 6 6"}]}],"回到闲话"]}],["$","div",null,{"className":"mt-6 flex flex-wrap items-center gap-3 text-xs text-ink-faint","children":[["$","span",null,{"className":"flex items-center gap-1.5","children":[["$","svg",null,{"width":13,"height":13,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":1.7,"strokeLinecap":"round","strokeLinejoin":"round","aria-hidden":"true","children":["$","path",null,{"d":"M8 3v4m8-4v4M3 9h18M5 5h14v16H5z"}]}],["$","time",null,{"dateTime":"2026-10-18T00:00:00.000Z","children":"2026-10-18"}]]}],["$","span",null,{"className":"rounded-full bg-ink/8 px-2 py-0.5","children":"平静"}],[["$","span","建站",{"className":"text-indigo","children":["#","建站"]}],["$","span","随笔",{"className":"text-indigo","children":["#","随笔"]}]]]}],["$","div",null,{"className":"prose mt-5","dangerouslySetInnerHTML":{"__html":"$10"}}],["$","nav",null,{"className":"mt-12 grid gap-3 sm:grid-cols-2","aria-label":"上一条 / 下一条闲话","children":["$L11","$L12"]}]]}]]}],["$L13"],"$L14"]}],"p":"$@15","v":null,"s":"$9"}}]]
+a:[["children",{"s":{"n":"slug","t":"d","k":"2026-10-18-ninth-day","s":[]},"h":96,"d":{"r":["$","$2","c",{"children":[null,["$","$L5",null,{"parallelRouterKey":"children","template":["$","$L6",null,{}]}]]}],"p":"$@b","v":"$8","s":"$9"},"c":"$Qc"}]]
+1:[["children",{"s":"chatter","h":64,"d":{"r":["$","$2","c",{"children":[null,["$","$L5",null,{"parallelRouterKey":"children","template":["$","$L6",null,{}]}]]}],"p":"$@7","v":"$8","s":"$9"},"c":"$Qa"}]]
+0:{"t":{"t":{"s":"","h":16,"c":"$Q1"},"h":{"r":["$","$2","h",{"children":[null,["$","$L17",null,{"children":[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]}],["$","$L19",null,{"children":[["$","div",null,{"hidden":true,"children":["$","$1a",null,{"name":"Next.Metadata","children":[["$","title","0",{"children":"第九天 第九天了。 我给这个站定过一个模糊的终点： 等它不再需要我解释的时候，就算做完了 。今天打开它，从头点到尾，居然… · Zane-Cody's Hoard"}],["$","meta","1",{"name":"description","content":"第九天 第九天了。 我给这个站定过一个模糊的终点： 等它不再需要我解释的时候，就算做完了 。今天打开它，从头点到尾，居然…"}],["$","meta","2",{"name":"application-name","content":"Zane-Cody's Hoard"}],["$","meta","3",{"name":"author","content":"Cody"}],["$","link","4",{"rel":"alternate","type":"application/rss+xml","href":"https://yuzhiboyao015-lgtm.github.io/feed.xml"}],["$","meta","5",{"property":"og:title","content":"第九天 第九天了。 我给这个站定过一个模糊的终点： 等它不再需要我解释的时候，就算做完了 。今天打开它，从头点到尾，居然…"}],["$","meta","6",{"property":"og:description","content":"第九天 第九天了。 我给这个站定过一个模糊的终点： 等它不再需要我解释的时候，就算做完了 。今天打开它，从头点到尾，居然…"}],["$","meta","7",{"property":"og:type","content":"article"}],["$","meta","8",{"name":"twitter:card","content":"summary_large_image"}],["$","meta","9",{"name":"twitter:title","content":"第九天 第九天了。 我给这个站定过一个模糊的终点： 等它不再需要我解释的时候，就算做完了 。今天打开它，从头点到尾，居然…"}],["$","meta","10",{"name":"twitter:description","content":"第九天 第九天了。 我给这个站定过一个模糊的终点： 等它不再需要我解释的时候，就算做完了 。今天打开它，从头点到尾，居然…"}],["$","link","11",{"rel":"icon","href":"/icon.svg?icon.3xzy_oe-13hn3.svg","sizes":"any","type":"image/svg+xml"}],["$","$L1b","12",{}]]}]}],null]}],null]}],"p":"$@1c","v":null,"s":"$9"}},"a":"$@1d","u":"$@1e","b":"egG6pgDPsEPbPy0I5wCXT"}
+1f:I[97367,["$3","$4"],"OutletBoundary"]
+11:["$","span",null,{}]
+12:["$","$Lf",null,{"href":"/chatter/2026-10-17-neutral-gray/","className":"glass glass-hover px-5 py-4 text-right sm:col-start-2","children":[["$","span",null,{"className":"text-xs text-ink-faint","children":"更早的一条 →"}],["$","span",null,{"className":"mt-1 block truncate text-sm text-ink","children":"！？中性灰！？ 日子好似淡如水，小时候总以为自己的生活会…"}]]}]
+13:["$","script","script-0",{"src":"/_next/static/chunks/15o3i4r9clpzu.js","async":true}]
+14:["$","$L1f",null,{"children":["$","$1a",null,{"name":"Next.MetadataOutlet","children":"$@20"}]}]
+1e:true
+9:300
+20:null
+9:C
+1d:0
+b:"$undefined"
+7:"$undefined"
+1c:"$undefined"
+15:"$undefined"

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>林间小筑 · A Cabin in the Woods</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    width: 100%; height: 100%;
+    background: #06080b;
+    overflow: hidden;
+    font-family: "Georgia", "Songti SC", "Noto Serif SC", "Times New Roman", serif;
+    color: #e6dccb;
+  }
+  canvas { display: block; width: 100%; height: 100%; }
+
+  /* ---------- loading veil ---------- */
+  #loader {
+    position: fixed; inset: 0;
+    background: #06080b;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 50;
+    transition: opacity 1.5s ease;
+  }
+  #loader.hide { opacity: 0; pointer-events: none; }
+  .l-inner {
+    display: flex; flex-direction: column; align-items: center; gap: 18px;
+    animation: breathe 3.4s ease-in-out infinite;
+  }
+  .l-mark {
+    font-size: 26px; color: #c9a87a; opacity: .8;
+    letter-spacing: 0;
+  }
+  .l-text {
+    font-size: 11px; letter-spacing: .42em; text-indent: .42em;
+    color: #8b8378; opacity: .75;
+  }
+  @keyframes breathe {
+    0%, 100% { opacity: .42; transform: translateY(0); }
+    50% { opacity: .92; transform: translateY(-3px); }
+  }
+
+  /* ---------- hud ---------- */
+  .hud { position: fixed; inset: 0; pointer-events: none; z-index: 20; }
+
+  .title {
+    position: absolute; top: clamp(24px, 4.4vh, 52px); left: clamp(24px, 4vw, 62px);
+    opacity: 0;
+    animation: rise 2.6s cubic-bezier(.16,.8,.3,1) forwards;
+    animation-delay: .7s;
+  }
+  .title h1 {
+    font-size: clamp(19px, 2.35vw, 33px);
+    font-weight: 400;
+    letter-spacing: .30em;
+    text-indent: .10em;
+    color: #f0e4d0;
+    text-shadow: 0 2px 30px rgba(0,0,0,.75), 0 0 60px rgba(255,170,90,.12);
+    line-height: 1.2;
+  }
+  .title p {
+    margin-top: .85em;
+    font-size: clamp(8px, .72vw, 10px);
+    letter-spacing: .52em;
+    text-indent: .52em;
+    color: #b39a76;
+    opacity: .82;
+    font-family: "Georgia", serif;
+  }
+  .title .rule {
+    margin-top: 1.1em;
+    width: 54px; height: 1px;
+    background: linear-gradient(90deg, rgba(201,168,122,.85), rgba(201,168,122,0));
+  }
+
+  .stamp {
+    position: absolute; top: clamp(24px, 4.6vh, 54px); right: clamp(24px, 4vw, 62px);
+    text-align: right;
+    font-size: clamp(8px, .72vw, 10px);
+    letter-spacing: .34em;
+    color: #96897a;
+    opacity: 0;
+    animation: rise 2.6s cubic-bezier(.16,.8,.3,1) forwards;
+    animation-delay: 1.35s;
+    line-height: 2;
+  }
+  .stamp b { display: block; color: #c9a87a; font-weight: 400; letter-spacing: .30em; }
+
+  .hint {
+    position: absolute; bottom: clamp(22px, 3.6vh, 42px); right: clamp(24px, 4vw, 62px);
+    font-size: clamp(8px, .7vw, 10px);
+    letter-spacing: .30em;
+    color: #8d8578;
+    opacity: 0;
+    animation: riseSlow 3.2s ease forwards;
+    animation-delay: 2.4s;
+    text-align: right;
+  }
+
+  .vign {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 46%, rgba(0,0,0,0) 42%, rgba(0,0,0,.42) 100%);
+    pointer-events: none;
+  }
+
+  #err {
+    display: none;
+    position: fixed; left: 20px; bottom: 20px; z-index: 99;
+    max-width: 70vw;
+    padding: 10px 14px;
+    background: rgba(120, 30, 30, .85);
+    color: #ffd9d9;
+    font-family: ui-monospace, Consolas, monospace;
+    font-size: 12px;
+    border-radius: 4px;
+    white-space: pre-wrap;
+  }
+
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes riseSlow {
+    from { opacity: 0; transform: translateY(9px); }
+    to { opacity: .9; transform: translateY(0); }
+  }
+
+.ctrls {
+    position: absolute; bottom: clamp(22px, 3.6vh, 42px); left: clamp(24px, 4vw, 62px);
+    display: flex; gap: 8px; pointer-events: auto;
+    opacity: 0; animation: riseSlow 3.2s ease forwards; animation-delay: 2.2s;
+  }
+  .ctrls button {
+    width: 34px; height: 34px; border-radius: 50%;
+    border: 1px solid rgba(214,182,134,.62);
+    background: rgba(10,14,18,.62);
+    color: #efe0c6; font-size: 16px; font-weight: 500; line-height: 1;
+    cursor: pointer; backdrop-filter: blur(6px);
+    display: grid; place-items: center;
+    box-shadow: 0 6px 18px -10px rgba(0,0,0,.9);
+    transition: background .25s ease, border-color .25s ease, color .25s ease;
+    font-family: ui-monospace, Consolas, monospace;
+  }
+  .ctrls button:hover { background: rgba(201,168,122,.18); border-color: rgba(201,168,122,.6); color: #f3e6d0; }
+  .ctrls button:active { transform: scale(.94); }
+  .ctrls button.wide { width: auto; padding: 0 12px; border-radius: 999px; font-size: 10px; letter-spacing: .18em; }
+
+  @media (max-width: 640px) {
+    .title h1 { letter-spacing: .2em; }
+    .hint { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div id="loader">
+  <div class="l-inner">
+    <div class="l-mark">☾</div>
+    <div class="l-text">穿过树林</div>
+  </div>
+</div>
+
+<div class="hud">
+  <div class="title">
+    <h1>林间小筑</h1>
+    <p>A CABIN IN THE WOODS</p>
+    <div class="rule"></div>
+  </div>
+
+  <div class="stamp">
+    <b>19:42</b>
+    暮色 · 微雾
+  </div>
+
+  <div class="ctrls">
+    <button type="button" data-act="in" title="放大" aria-label="放大">＋</button>
+    <button type="button" data-act="out" title="缩小" aria-label="缩小">－</button>
+    <button type="button" class="wide" data-act="reset" title="回到初始机位" aria-label="回到初始机位">复位</button>
+  </div>
+
+  <div class="hint">拖动环视 · 滚轮推近</div>
+  <div class="vign"></div>
+</div>
+
+<div id="err"></div>
+
+<script src="./app.js"></script>
+<script>
+  // 按钮接相机 API；滚轮和拖拽照旧可用。
+  // 嵌在别人页面里时，滚轮有可能被外层截走 —— 有按钮就不至于"没法放大缩小"。
+  document.querySelectorAll('.ctrls button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var api = window.__cabinApi;
+      if (!api) return;
+      var act = b.dataset.act;
+      if (act === 'in') api.zoomBy(0.86);
+      else if (act === 'out') api.zoomBy(1.16);
+      else api.reset();
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+:HL["/_next/static/chunks/3x3r-p-c8hqjb.css","style"]
+:HL["/media/photos/w09.webp","image"]
+:HL["/media/avatar.jpg","image"]
+2:[["children",{"s":"__PAGE__","h":160}]]
+1:[["children",{"s":"about","h":64,"c":"$Q2"}]]
+0:{"b":"egG6pgDPsEPbPy0I5wCXT","t":{"t":{"s":"","h":16,"c":"$Q1"}}}

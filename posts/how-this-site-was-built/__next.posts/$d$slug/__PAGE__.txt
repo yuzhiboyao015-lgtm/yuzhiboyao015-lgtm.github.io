@@ -1,0 +1,91 @@
+2:"$Sreact.fragment"
+3:"/_next/static/chunks/29-jnpd0sx46j.js"
+4:"/_next/static/chunks/1enfzvprn6ufv.js"
+5:I[39756,["$3","$4"],"default"]
+6:I[37457,["$3","$4"],"default"]
+d:"/_next/static/chunks/3jplpfe506-37.js"
+e:I[56253,["$3","$4","$d"],"default"]
+f:I[22016,["$3","$4","$d"],""]
+16:"ViewportBoundary"
+17:I[97367,["$3","$4"],"$16"]
+18:"MetadataBoundary"
+19:I[97367,["$3","$4"],"$18"]
+1a:"$Sreact.suspense"
+1b:I[27201,["$3","$4"],"IconMark"]
+8:X
+8:C
+9:X
+10:T2433,<p>开一个新站最费时间的从来不是写代码，是决定「用什么写」。这篇把当时的取舍记下来，省得以后自己都忘了。</p>
+<h2 id="为什么是静态导出">为什么是静态导出</h2>
+<p>这个站没有任何需要服务端的东西：没有登录、没有数据库、没有实时数据。所有内容在构建时就确定了。</p>
+<p>所以直接开静态导出：</p>
+<pre class="shiki synthwave-84" style="background-color:#262335;color:#bbbbbb" tabindex="0"><code><span class="line"><span style="color:#848BBD;font-style:italic">// next.config.ts</span></span>
+<span class="line"><span style="color:#FEDE5D">const</span><span style="color:#FF7EDB"> nextConfig</span><span style="color:#FEDE5D">:</span><span style="color:#FE4450"> NextConfig</span><span style="color:#FFFFFFEE"> =</span><span style="color:#BBBBBB"> {</span></span>
+<span class="line"><span style="color:#FF7EDB">  output</span><span style="color:#B6B1B1">:</span><span style="color:#FF8B39"> "export"</span><span style="color:#BBBBBB">,        </span><span style="color:#848BBD;font-style:italic">// 构建产物是 out/</span></span>
+<span class="line"><span style="color:#FF7EDB">  images</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> { </span><span style="color:#FF7EDB">unoptimized</span><span style="color:#B6B1B1">:</span><span style="color:#F97E72"> true</span><span style="color:#BBBBBB"> },</span></span>
+<span class="line"><span style="color:#FF7EDB">  trailingSlash</span><span style="color:#B6B1B1">:</span><span style="color:#F97E72"> true</span><span style="color:#BBBBBB">,     </span><span style="color:#848BBD;font-style:italic">// 导出成 /about/index.html，兼容性好</span></span>
+<span class="line"><span style="color:#BBBBBB">};</span></span></code></pre>
+<p>好处很实在：</p>
+<ul>
+<li><strong>部署自由</strong>。产物就是一堆 HTML/CSS/JS，丢到 Vercel、Cloudflare Pages、GitHub Pages 还是自己的 nginx 都能跑，不会被某个平台绑住。</li>
+<li><strong>省钱</strong>。静态托管的免费额度通常够用一辈子。</li>
+<li><strong>快</strong>。没有服务端渲染的往返，首屏就是 HTML。</li>
+</ul>
+<p>代价也要说清楚：没有服务端就意味着<strong>不能有 API 路由、不能有 Server Actions、不能用 ISR</strong>。以后要是想加评论系统，得挂第三方（比如 Giscus）。</p>
+<h2 id="为什么内容用-markdown-而不是-mdx">为什么内容用 Markdown 而不是 MDX</h2>
+<p>MDX 很诱人：能在正文里直接写 React 组件。但它把<strong>内容格式和框架版本绑死了</strong> —— MDX 的编译器和 React 版本强耦合，升级框架时正文有可能集体编译失败。</p>
+<p>对一个要放很多年的个人站来说，这个风险不划算。所以用最朴素的方案：</p>
+<pre class="shiki synthwave-84" style="background-color:#262335;color:#bbbbbb" tabindex="0"><code><span class="line"><span style="color:#36F9F6">unified</span><span style="color:#BBBBBB">()</span></span>
+<span class="line"><span style="color:#BBBBBB">  .</span><span style="color:#36F9F6">use</span><span style="color:#BBBBBB">(</span><span style="color:#FF7EDB">remarkParse</span><span style="color:#BBBBBB">)</span></span>
+<span class="line"><span style="color:#BBBBBB">  .</span><span style="color:#36F9F6">use</span><span style="color:#BBBBBB">(</span><span style="color:#FF7EDB">remarkGfm</span><span style="color:#BBBBBB">)</span></span>
+<span class="line"><span style="color:#BBBBBB">  .</span><span style="color:#36F9F6">use</span><span style="color:#BBBBBB">(</span><span style="color:#FF7EDB">remarkRehype</span><span style="color:#BBBBBB">, { </span><span style="color:#FF7EDB">allowDangerousHtml</span><span style="color:#B6B1B1">:</span><span style="color:#F97E72"> true</span><span style="color:#BBBBBB"> })</span></span>
+<span class="line"><span style="color:#BBBBBB">  .</span><span style="color:#36F9F6">use</span><span style="color:#BBBBBB">(</span><span style="color:#FF7EDB">rehypeSlug</span><span style="color:#BBBBBB">)</span></span>
+<span class="line"><span style="color:#BBBBBB">  .</span><span style="color:#36F9F6">use</span><span style="color:#BBBBBB">(</span><span style="color:#FF7EDB">rehypeShiki</span><span style="color:#BBBBBB">, { </span><span style="color:#FF7EDB">theme</span><span style="color:#B6B1B1">:</span><span style="color:#FF8B39"> "synthwave-84"</span><span style="color:#BBBBBB"> })</span></span>
+<span class="line"><span style="color:#BBBBBB">  .</span><span style="color:#36F9F6">use</span><span style="color:#BBBBBB">(</span><span style="color:#FF7EDB">rehypeStringify</span><span style="color:#BBBBBB">, { </span><span style="color:#FF7EDB">allowDangerousHtml</span><span style="color:#B6B1B1">:</span><span style="color:#F97E72"> true</span><span style="color:#BBBBBB"> });</span></span></code></pre>
+<p>产出的是纯 HTML 字符串，跟 React 什么版本毫无关系。想加新语法就加插件，不想用了就删掉，正文一个字都不用动。</p>
+<blockquote>
+<p>内容比框架活得久。让内容依赖框架的实现细节，是给自己埋雷。</p>
+</blockquote>
+<h2 id="毛玻璃是怎么做的">毛玻璃是怎么做的</h2>
+<p>关键只有一行：</p>
+<pre class="shiki synthwave-84" style="background-color:#262335;color:#bbbbbb" tabindex="0"><code><span class="line"><span style="color:#FEDE5D">.card</span><span style="color:#BBBBBB"> {</span></span>
+<span class="line"><span style="color:#72F1B8">  backdrop-filter</span><span style="color:#B6B1B1">:</span><span style="color:#FE4450"> blur</span><span style="color:#BBBBBB">(</span><span style="color:#F97E72">18px</span><span style="color:#BBBBBB">) </span><span style="color:#FE4450">saturate</span><span style="color:#BBBBBB">(</span><span style="color:#F97E72">150%</span><span style="color:#BBBBBB">);</span></span>
+<span class="line"><span style="color:#BBBBBB">}</span></span></code></pre>
+<p>但<strong>毛玻璃必须有东西可以「透」</strong>。如果背景是一片纯色，模糊前后完全一样，效果等于没有 —— 这是很多人做毛玻璃翻车的原因。</p>
+<p>所以底下铺了一层极光：几个大幅模糊的彩色球体在缓慢漂移。</p>
+<pre class="shiki synthwave-84" style="background-color:#262335;color:#bbbbbb" tabindex="0"><code><span class="line"><span style="color:#FEDE5D">.aurora-blob</span><span style="color:#BBBBBB"> {</span></span>
+<span class="line"><span style="color:#72F1B8">  position</span><span style="color:#B6B1B1">:</span><span style="color:#FE4450"> absolute</span><span style="color:#BBBBBB">;</span></span>
+<span class="line"><span style="color:#72F1B8">  border-radius</span><span style="color:#B6B1B1">:</span><span style="color:#F97E72"> 999px</span><span style="color:#BBBBBB">;</span></span>
+<span class="line"><span style="color:#72F1B8">  filter</span><span style="color:#B6B1B1">:</span><span style="color:#FE4450"> blur</span><span style="color:#BBBBBB">(</span><span style="color:#F97E72">90px</span><span style="color:#BBBBBB">);</span></span>
+<span class="line"><span style="color:#72F1B8">  animation</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> drift </span><span style="color:#F97E72">26s</span><span style="color:#FE4450"> ease-in-out</span><span style="color:#FE4450"> infinite</span><span style="color:#BBBBBB">;</span></span>
+<span class="line"><span style="color:#BBBBBB">}</span></span></code></pre>
+<p>有了彩色的、会动的底，上面那层 <code>backdrop-filter</code> 才有意义。</p>
+<h2 id="用-theme-inline-串起设计变量">用 @theme inline 串起设计变量</h2>
+<p>Tailwind 4 允许把 CSS 变量注册成工具类：</p>
+<pre class="shiki synthwave-84" style="background-color:#262335;color:#bbbbbb" tabindex="0"><code><span class="line"><span style="color:#FEDE5D">@theme</span><span style="color:#BBBBBB"> inline {</span></span>
+<span class="line"><span style="color:#FF7EDB">  --color-sakura</span><span style="color:#B6B1B1">:</span><span style="color:#FE4450"> var</span><span style="color:#BBBBBB">(</span><span style="color:#FF7EDB">--c-sakura</span><span style="color:#BBBBBB">);</span></span>
+<span class="line"><span style="color:#FF7EDB">  --color-violet</span><span style="color:#B6B1B1">:</span><span style="color:#FE4450"> var</span><span style="color:#BBBBBB">(</span><span style="color:#FF7EDB">--c-violet</span><span style="color:#BBBBBB">);</span></span>
+<span class="line"><span style="color:#BBBBBB">}</span></span></code></pre>
+<p><code>inline</code> 这个关键字是关键。不加它，Tailwind 会把变量的<strong>值</strong>抄进每个工具类；加上之后生成的是 <code>var(--c-sakura)</code> 引用 —— 运行时改变量就能整体换色，不用重新构建。</p>
+<h2 id="最后">最后</h2>
+<p>整站的取舍其实就一句话：<strong>能在构建期做完的事，绝不留给运行时。</strong></p>
+<p>页面是构建期生成的、代码高亮是构建期算的、内容是构建期读的。浏览器拿到的就是最终结果，只需要跑两个客户端组件：音乐播放器和照片墙灯箱。</p>
+<p>剩下的时间，应该花在往里面填东西上。</p>c:[["children",{"s":"__PAGE__","h":160,"d":{"r":["$","$2","c",{"children":[["$","$Le",null,{"children":[["$","div",null,{"className":"page-band","aria-hidden":"true"}],["$","article",null,{"className":"post-layout mx-auto w-full","children":[["$","div",null,{"className":"post-shell","children":[["$","$Lf",null,{"href":"/archive","className":"chip","children":[["$","svg",null,{"width":13,"height":13,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":1.7,"strokeLinecap":"round","strokeLinejoin":"round","aria-hidden":"true","children":["$","path",null,{"d":"m15 6-6 6 6 6"}]}],"回到归档"]}],null,["$","h1",null,{"className":"mt-7 text-3xl font-bold leading-snug tracking-tight sm:text-4xl","children":["$","span",null,{"className":"text-gradient","children":"这个小屋是怎么搭起来的"}]}],["$","div",null,{"className":"mt-4 flex flex-wrap items-center gap-x-3 gap-y-2 text-xs text-ink-faint","children":[["$","span",null,{"className":"flex items-center gap-1.5","children":[["$","svg",null,{"width":13,"height":13,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":1.7,"strokeLinecap":"round","strokeLinejoin":"round","aria-hidden":"true","children":["$","path",null,{"d":"M8 3v4m8-4v4M3 9h18M5 5h14v16H5z"}]}],["$","time",null,{"dateTime":"2026-10-11T00:00:00.000Z","children":"2026-10-11"}]]}],["$","span",null,{"className":"flex items-center gap-1.5","children":[["$","svg",null,{"width":13,"height":13,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":1.7,"strokeLinecap":"round","strokeLinejoin":"round","aria-hidden":"true","children":["$","path",null,{"d":"M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0-13v5l3 2"}]}],4," 分钟"]}],null,[["$","span","建站",{"className":"chip !py-0 !text-[0.68rem]","children":["#","建站"]}],["$","span","Next.js",{"className":"chip !py-0 !text-[0.68rem]","children":["#","Next.js"]}]]]}],["$","p",null,{"className":"mt-6 border-l-2 border-cinnabar/60 pl-4 text-[0.95rem] leading-relaxed text-ink-dim","children":"从选型到上线：为什么用 Next.js 16 静态导出、为什么内容用 Markdown、毛玻璃效果具体怎么做的。"}],["$","div",null,{"className":"prose","dangerouslySetInnerHTML":{"__html":"$10"}}]]}],"$L11","$L12"]}]]}],["$L13"],"$L14"]}],"p":"$@15","v":null,"s":"$9"}}]]
+a:[["children",{"s":{"n":"slug","t":"d","k":"how-this-site-was-built","s":[]},"h":96,"d":{"r":["$","$2","c",{"children":[null,["$","$L5",null,{"parallelRouterKey":"children","template":["$","$L6",null,{}]}]]}],"p":"$@b","v":"$8","s":"$9"},"c":"$Qc"}]]
+1:[["children",{"s":"posts","h":64,"d":{"r":["$","$2","c",{"children":[null,["$","$L5",null,{"parallelRouterKey":"children","template":["$","$L6",null,{}]}]]}],"p":"$@7","v":"$8","s":"$9"},"c":"$Qa"}]]
+0:{"t":{"t":{"s":"","h":16,"c":"$Q1"},"h":{"r":["$","$2","h",{"children":[null,["$","$L17",null,{"children":[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]}],["$","$L19",null,{"children":[["$","div",null,{"hidden":true,"children":["$","$1a",null,{"name":"Next.Metadata","children":[["$","title","0",{"children":"这个小屋是怎么搭起来的 · Zane-Cody's Hoard"}],["$","meta","1",{"name":"description","content":"从选型到上线：为什么用 Next.js 16 静态导出、为什么内容用 Markdown、毛玻璃效果具体怎么做的。"}],["$","meta","2",{"name":"application-name","content":"Zane-Cody's Hoard"}],["$","meta","3",{"name":"author","content":"Cody"}],["$","link","4",{"rel":"alternate","type":"application/rss+xml","href":"https://yuzhiboyao015-lgtm.github.io/feed.xml"}],["$","meta","5",{"property":"og:title","content":"这个小屋是怎么搭起来的"}],["$","meta","6",{"property":"og:description","content":"从选型到上线：为什么用 Next.js 16 静态导出、为什么内容用 Markdown、毛玻璃效果具体怎么做的。"}],["$","meta","7",{"property":"og:type","content":"article"}],["$","meta","8",{"name":"twitter:card","content":"summary_large_image"}],["$","meta","9",{"name":"twitter:title","content":"这个小屋是怎么搭起来的"}],["$","meta","10",{"name":"twitter:description","content":"从选型到上线：为什么用 Next.js 16 静态导出、为什么内容用 Markdown、毛玻璃效果具体怎么做的。"}],["$","link","11",{"rel":"icon","href":"/icon.svg?icon.3xzy_oe-13hn3.svg","sizes":"any","type":"image/svg+xml"}],["$","$L1b","12",{}]]}]}],null]}],null]}],"p":"$@1c","v":null,"s":"$9"}},"a":"$@1d","u":"$@1e","b":"egG6pgDPsEPbPy0I5wCXT"}
+1f:I[46311,["$3","$4","$d"],"default"]
+20:I[97367,["$3","$4"],"OutletBoundary"]
+11:["$","aside",null,{"className":"post-toc xl:sticky xl:top-24","children":["$","$L1f",null,{"headings":[{"depth":2,"id":"为什么是静态导出","text":"为什么是静态导出"},{"depth":2,"id":"为什么内容用-markdown-而不是-mdx","text":"为什么内容用 Markdown 而不是 MDX"},{"depth":2,"id":"毛玻璃是怎么做的","text":"毛玻璃是怎么做的"},{"depth":2,"id":"用-theme-inline-串起设计变量","text":"用 @theme inline 串起设计变量"},{"depth":2,"id":"最后","text":"最后"}]}]}]
+12:["$","nav",null,{"className":"post-nav grid gap-3 sm:grid-cols-2","aria-label":"上一篇 / 下一篇","children":[["$","$Lf",null,{"href":"/posts/2026-10-16-engineering-ledger/","className":"glass glass-hover px-5 py-4","children":[["$","span",null,{"className":"text-xs text-ink-faint","children":"← 更新的一篇"}],["$","span",null,{"className":"mt-1 block truncate text-sm text-ink","children":"九千行代码，七千行样式：一份建站工程账"}]]}],["$","$Lf",null,{"href":"/posts/css-masonry-gallery/","className":"glass glass-hover px-5 py-4 text-right sm:col-start-2","children":[["$","span",null,{"className":"text-xs text-ink-faint","children":"更早的一篇 →"}],["$","span",null,{"className":"mt-1 block truncate text-sm text-ink","children":"照片墙的瀑布流是 CSS 做的，一行 JS 都没有"}]]}]]}]
+13:["$","script","script-0",{"src":"/_next/static/chunks/3jplpfe506-37.js","async":true}]
+14:["$","$L20",null,{"children":["$","$1a",null,{"name":"Next.MetadataOutlet","children":"$@21"}]}]
+1e:true
+9:300
+21:null
+9:C
+1d:0
+b:"$undefined"
+7:"$undefined"
+1c:"$undefined"
+15:"$undefined"
