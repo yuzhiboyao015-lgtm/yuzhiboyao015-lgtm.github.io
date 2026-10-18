@@ -1,0 +1,89 @@
+2:"$Sreact.fragment"
+3:"/_next/static/chunks/24g3twp2iow8g.js"
+4:"/_next/static/chunks/0dxla8mr9n63d.js"
+5:I[39756,["$3","$4"],"default"]
+6:I[37457,["$3","$4"],"default"]
+d:"/_next/static/chunks/3jplpfe506-37.js"
+e:I[56253,["$3","$4","$d"],"default"]
+f:I[22016,["$3","$4","$d"],""]
+16:"ViewportBoundary"
+17:I[97367,["$3","$4"],"$16"]
+18:"MetadataBoundary"
+19:I[97367,["$3","$4"],"$18"]
+1a:"$Sreact.suspense"
+1b:I[27201,["$3","$4"],"IconMark"]
+8:X
+8:C
+9:X
+10:T1e73,<p>第一次把这站推到 GitHub，进度条停在 63%，然后失败。原因是一个 101 MB 的 mp4——单文件上限一百兆，它只超了一兆。</p>
+<p>我把那个数字看了很久。一兆。为了省这一兆，后面花了整整一个下午。</p>
+<h2 id="那个视频">那个视频</h2>
+<p>原片是手机直接拍的，码率高到没什么意义。ffmpeg 重压一遍，1920 宽、CRF 21、音轨直接 copy 不动，出来 75.8 MB。顺手把中间产物全删了，磁盘上收回 994 MB。</p>
+<p>但 git 历史里那坨还躺着，<code>.git</code> 现在 356 MB。要彻底清掉得重写历史，把所有 commit 的 hash 全换一遍。这事我暂时不干——本地就我一个人用，等哪天真的碍事了再说。</p>
+<p>后来换了个更省事的办法：部署用的仓库只放 <code>out/</code> 的产物，234 个文件，跟源码历史完全分开。这样那 101 MB 永远压不到推送速度上。</p>
+<h2 id="为什么是静态站">为什么是静态站</h2>
+<p>这站没有任何需要服务端的东西。没有登录，没有数据库，没有实时数据，所有内容在构建那一刻就定了。</p>
+<p>那就直接静态导出。<code>output: "export"</code>、<code>images: { unoptimized: true }</code>、<code>trailingSlash: true</code>。产物是一堆 HTML 和 CSS，丢哪儿都能跑，也不会被某个平台绑死。</p>
+<p>代价也清楚：改一句错字，也得重新构建再推送一遍。这个代价后来变成了一个脚本，等下说。</p>
+<h2 id="样式为什么写成七千行">样式为什么写成七千行</h2>
+<p>本来打算拆文件的。拆到第三次就放弃了，因为新写的选择器总要用到前面那堆变量，拆开之后来回 import，看着更乱。于是 <code>globals.css</code> 一路长到七千多，从头翻到底要滑好几屏。</p>
+<p>页面级的作用域是靠 <code>:has()</code> 做的。比如灯箱打开的时候要隐藏竹叶和太极那一层，就写 <code>body:has(.photo-lightbox) .leaf-layer { ... }</code>，不用给 body 加 class，也不用 JS 参与。</p>
+<p>颜色上有个自己定的规矩：朱红只出现在「当前这一项」上，别处一律不用。这条守住了，界面就不会花。</p>
+<h2 id="照片墙">照片墙</h2>
+<p>一开始用 CSS <code>columns</code> 做瀑布流。问题很快就来了：顺序是竖着排的，读起来莫名其妙；最后一行经常参差不齐；视频卡片高度算不准，会把整列顶歪。</p>
+<p>最后改成按列高动态分配。每个卡片先量出高宽比，然后往当前最矮的那一列里塞。逻辑不难，难的是等图片加载——尺寸得写在数据里，不能等 <code>onLoad</code>，否则首屏会跳。</p>
+<p>图存两套：长边 2400 的 webp 给灯箱，960 的缩略图给列表。30 个作品里有 4 个是视频，缩略图上悬停会静音预览，点开才带声音。</p>
+<h2 id="林间小筑">林间小筑</h2>
+<p>那个 3D 场景是另一个项目，打完包放进 iframe。两个 bug 折腾了一晚上。</p>
+<p>第一个是滚轮缩放没反应。父页面把滚轮事件吃掉了，iframe 里收不到。第二个更烦：转到别的方位，一松手画面就自己转回去。</p>
+<p>查了半天，原因是「待机摆动」——一个为了让场景别太死板加的轻微呼吸动画，它每帧都在改 <code>controls.target.y</code>。用户拖的时候看不出来，一松手，阻尼又把视角拉回那个被改过的目标点，看起来就像回弹。</p>
+<p>修法是给用户操作加一个标记：一旦自己动了，就停掉待机摆动，把入场时间轴直接推到末尾，再松手就完全交给阻尼。改完那个「拽回去」的感觉才消失。</p>
+<h2 id="删掉十二首歌">删掉十二首歌</h2>
+<p>音乐库原来有十七首，其中十二首是空的——只有条目，没有音频文件，播到就报错。</p>
+<p>留着没有任何意义，它们只是让列表看起来更长。全删了，剩五首，每首都能播。</p>
+<h2 id="计数器">计数器</h2>
+<p>访问量用的是一个免费接口，不用注册，CORS 开着，<code>hit</code> 加一、<code>get</code> 读取。</p>
+<p>有个细节必须处理：本地开发跑起来的时候，它只读不写。否则我自己刷新一百次，页面上那个数字就变成一百零几，看着像有人在看。</p>
+<h2 id="构建时删不掉的文件">构建时删不掉的文件</h2>
+<p>重装依赖之后，<code>next build</code> 直接炸，报 EPERM，指着一个 <code>.next/node_modules/shiki-*</code> 的符号链接。</p>
+<p>Windows 上这东西删不掉，也覆盖不了。后来写了个小脚本，每次构建前先把这些目录联接摘掉，再交给 Next。加进 <code>prebuild</code> 之后就没再见过这个错。</p>
+<h2 id="上线然后被自己关掉">上线，然后被自己关掉</h2>
+<p>第一次推到 GitHub Pages，打开是一句 "Site not found"。查了半小时，最后发现是仓库不知什么时候变成了私有——<strong>免费版的 Pages 只服务公开仓库</strong>。</p>
+<p>改成公开，重新开 Pages，好了。</p>
+<p>还有个更蠢的：忘了 <code>.nojekyll</code>。Jekyll 会把下划线开头的目录忽略掉，<code>_next</code> 正好撞上，页面直接白屏。看到白屏那一瞬间我以为是自己 CSS 写崩了。</p>
+<h2 id="十分钟的缓存">十分钟的缓存</h2>
+<p>改完内容 push 上去，刷新，没变。再 push，还是没变。第三次 push 完我开始怀疑推送本身失败了。</p>
+<p>真相是 GitHub Pages 给 HTML 的 <code>Cache-Control</code> 是 <code>max-age=600</code>。十分钟。这十分钟里浏览器拿的一直是旧的那份。</p>
+<p>知道这件事之后，我看待「部署成功」的标准就变了：不是推送成功，是十分钟后还能看到。</p>
+<h2 id="一条命令">一条命令</h2>
+<p>后来实在受不了「构建→等→推送→等→刷新→没变」这套，写了个 <code>ship</code> 脚本。</p>
+<p>现在跑 <code>npm run ship</code>：构建 9 到 10 秒，增量推送 3 到 5 秒，Pages 发布 39 秒左右，一共 54 秒。脚本最后会自己去线上抓一次指纹，对上了才算完。</p>
+<p>它还会检查一件事：如果 <code>SITE.url</code> 还是本地地址，就先警告一句。因为我真的干过——把站推上去，结果 sitemap、canonical、robots 全指向 <code>127.0.0.1:4321</code>。</p>
+<h2 id="域名">域名</h2>
+<p><code>zanecody.cn</code> 是最后买的。买完状态是「注册局审核中」，公共 DNS 查过去是 NXDOMAIN。那会儿我以为是自己解析配错了，翻来覆去看了好几遍记录。</p>
+<p>审核过了之后，四条 A 记录指向 GitHub 的四个 IP，<code>www</code> 一条 CNAME 指回去。十分钟内全部生效。</p>
+<p>然后是 HTTPS。</p>
+<h2 id="到现在还没解决的那件事">到现在还没解决的那件事</h2>
+<p><code>https://zanecody.cn</code> 打不开。443 端口上挂着的是 <code>*.github.io</code> 的通用证书，它不包含我这个域名，所以浏览器判定证书不匹配。</p>
+<p>我试过重新提交域名、手动触发构建、把域名摘掉再挂回、查 CAA 有没有拦住 Let's Encrypt——都没有问题。想关掉 Pages 再重开强制它重签，接口回了一句 <code>Deactivating GitHub pages for this repository is not allowed</code>，因为 <code>*.github.io</code> 这种用户站不允许停用。</p>
+<p>现在就是等。官方口径是最多 24 小时。</p>
+<p>所以这站现在能开，但地址栏前面那行字是「不安全」。内容都在，图片都能看，只是那个提示还在。</p>
+<p>也挺好，一篇讲建站的文章，结尾留一个没修好的 bug，比什么都真实。</p>c:[["children",{"s":"__PAGE__","h":160,"d":{"r":["$","$2","c",{"children":[["$","$Le",null,{"children":[["$","div",null,{"className":"page-band","aria-hidden":"true"}],["$","article",null,{"className":"post-layout mx-auto w-full","children":[["$","div",null,{"className":"post-shell","children":[["$","$Lf",null,{"href":"/archive","className":"chip","children":[["$","svg",null,{"width":13,"height":13,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":1.7,"strokeLinecap":"round","strokeLinejoin":"round","aria-hidden":"true","children":["$","path",null,{"d":"m15 6-6 6 6 6"}]}],"回到归档"]}],null,["$","h1",null,{"className":"mt-7 text-3xl font-bold leading-snug tracking-tight sm:text-4xl","children":["$","span",null,{"className":"text-gradient","children":"一百兆的 mp4，和九天里剩下的东西"}]}],["$","div",null,{"className":"mt-4 flex flex-wrap items-center gap-x-3 gap-y-2 text-xs text-ink-faint","children":[["$","span",null,{"className":"flex items-center gap-1.5","children":[["$","svg",null,{"width":13,"height":13,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":1.7,"strokeLinecap":"round","strokeLinejoin":"round","aria-hidden":"true","children":["$","path",null,{"d":"M8 3v4m8-4v4M3 9h18M5 5h14v16H5z"}]}],["$","time",null,{"dateTime":"2026-10-18T00:00:00.000Z","children":"2026-10-18"}]]}],["$","span",null,{"className":"flex items-center gap-1.5","children":[["$","svg",null,{"width":13,"height":13,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":1.7,"strokeLinecap":"round","strokeLinejoin":"round","aria-hidden":"true","children":["$","path",null,{"d":"M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0-13v5l3 2"}]}],5," 分钟"]}],null,[["$","span","建站",{"className":"chip !py-0 !text-[0.68rem]","children":["#","建站"]}],["$","span","部署",{"className":"chip !py-0 !text-[0.68rem]","children":["#","部署"]}],["$","span","Next.js",{"className":"chip !py-0 !text-[0.68rem]","children":["#","Next.js"]}]]]}],["$","p",null,{"className":"mt-6 border-l-2 border-cinnabar/60 pl-4 text-[0.95rem] leading-relaxed text-ink-dim","children":"这站从第一行代码到能在 zanecody.cn 打开，中间那些具体的麻烦：一个超出上限一兆的视频、构建时删不掉的文件、十分钟看不见的更新，和一张两小时还没签下来的证书。"}],["$","div",null,{"className":"prose","dangerouslySetInnerHTML":{"__html":"$10"}}]]}],"$L11","$L12"]}]]}],["$L13"],"$L14"]}],"p":"$@15","v":null,"s":"$9"}}]]
+a:[["children",{"s":{"n":"slug","t":"d","k":"2026-10-18-a-hundred-megabyte-mp4","s":[]},"h":96,"d":{"r":["$","$2","c",{"children":[null,["$","$L5",null,{"parallelRouterKey":"children","template":["$","$L6",null,{}]}]]}],"p":"$@b","v":"$8","s":"$9"},"c":"$Qc"}]]
+1:[["children",{"s":"posts","h":64,"d":{"r":["$","$2","c",{"children":[null,["$","$L5",null,{"parallelRouterKey":"children","template":["$","$L6",null,{}]}]]}],"p":"$@7","v":"$8","s":"$9"},"c":"$Qa"}]]
+0:{"t":{"t":{"s":"","h":16,"c":"$Q1"},"h":{"r":["$","$2","h",{"children":[null,["$","$L17",null,{"children":[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1, viewport-fit=cover"}],["$","meta","2",{"name":"theme-color","content":"#080b12"}]]}],["$","$L19",null,{"children":[["$","div",null,{"hidden":true,"children":["$","$1a",null,{"name":"Next.Metadata","children":[["$","title","0",{"children":"一百兆的 mp4，和九天里剩下的东西 · Zane-Cody's Hoard"}],["$","meta","1",{"name":"description","content":"这站从第一行代码到能在 zanecody.cn 打开，中间那些具体的麻烦：一个超出上限一兆的视频、构建时删不掉的文件、十分钟看不见的更新，和一张两小时还没签下来的证书。"}],["$","meta","2",{"name":"application-name","content":"Zane-Cody's Hoard"}],["$","meta","3",{"name":"author","content":"Cody"}],["$","link","4",{"rel":"canonical","href":"https://zanecody.cn/posts/2026-10-18-a-hundred-megabyte-mp4/"}],["$","link","5",{"rel":"alternate","type":"application/rss+xml","href":"https://zanecody.cn/feed.xml"}],["$","meta","6",{"property":"og:title","content":"一百兆的 mp4，和九天里剩下的东西"}],["$","meta","7",{"property":"og:description","content":"这站从第一行代码到能在 zanecody.cn 打开，中间那些具体的麻烦：一个超出上限一兆的视频、构建时删不掉的文件、十分钟看不见的更新，和一张两小时还没签下来的证书。"}],["$","meta","8",{"property":"og:url","content":"https://zanecody.cn/posts/2026-10-18-a-hundred-megabyte-mp4/"}],["$","meta","9",{"property":"og:type","content":"article"}],["$","meta","10",{"name":"twitter:card","content":"summary_large_image"}],["$","meta","11",{"name":"twitter:title","content":"一百兆的 mp4，和九天里剩下的东西"}],["$","meta","12",{"name":"twitter:description","content":"这站从第一行代码到能在 zanecody.cn 打开，中间那些具体的麻烦：一个超出上限一兆的视频、构建时删不掉的文件、十分钟看不见的更新，和一张两小时还没签下来的证书。"}],["$","link","13",{"rel":"icon","href":"/icon.svg?icon.3xzy_oe-13hn3.svg","sizes":"any","type":"image/svg+xml"}],["$","$L1b","14",{}]]}]}],null]}],null]}],"p":"$@1c","v":null,"s":"$9"}},"a":"$@1d","u":"$@1e","b":"tJRFN8NXre35x2nvOe_1m"}
+1f:I[46311,["$3","$4","$d"],"default"]
+20:I[97367,["$3","$4"],"OutletBoundary"]
+11:["$","aside",null,{"className":"post-toc xl:sticky xl:top-24","children":["$","$L1f",null,{"headings":[{"depth":2,"id":"那个视频","text":"那个视频"},{"depth":2,"id":"为什么是静态站","text":"为什么是静态站"},{"depth":2,"id":"样式为什么写成七千行","text":"样式为什么写成七千行"},{"depth":2,"id":"照片墙","text":"照片墙"},{"depth":2,"id":"林间小筑","text":"林间小筑"},{"depth":2,"id":"删掉十二首歌","text":"删掉十二首歌"},{"depth":2,"id":"计数器","text":"计数器"},{"depth":2,"id":"构建时删不掉的文件","text":"构建时删不掉的文件"},{"depth":2,"id":"上线然后被自己关掉","text":"上线，然后被自己关掉"},{"depth":2,"id":"十分钟的缓存","text":"十分钟的缓存"},{"depth":2,"id":"一条命令","text":"一条命令"},{"depth":2,"id":"域名","text":"域名"},{"depth":2,"id":"到现在还没解决的那件事","text":"到现在还没解决的那件事"}]}]}]
+12:["$","nav",null,{"className":"post-nav grid gap-3 sm:grid-cols-2","aria-label":"上一篇 / 下一篇","children":[["$","span",null,{}],["$","$Lf",null,{"href":"/posts/2026-10-18-touch-and-feel/","className":"glass glass-hover px-5 py-4 text-right sm:col-start-2","children":[["$","span",null,{"className":"text-xs text-ink-faint","children":"更早的一篇 →"}],["$","span",null,{"className":"mt-1 block truncate text-sm text-ink","children":"手感：一套动效参数表和三次翻车记录"}]]}]]}]
+13:["$","script","script-0",{"src":"/_next/static/chunks/3jplpfe506-37.js","async":true}]
+14:["$","$L20",null,{"children":["$","$1a",null,{"name":"Next.MetadataOutlet","children":"$@21"}]}]
+1e:true
+9:300
+21:null
+9:C
+1d:0
+b:"$undefined"
+7:"$undefined"
+1c:"$undefined"
+15:"$undefined"

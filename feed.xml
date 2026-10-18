@@ -7,6 +7,16 @@
     <language>zh-CN</language>
     <atom:link href="https://zanecody.cn/feed.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>一百兆的 mp4，和九天里剩下的东西</title>
+      <link>https://zanecody.cn/posts/2026-10-18-a-hundred-megabyte-mp4/</link>
+      <guid isPermaLink="true">https://zanecody.cn/posts/2026-10-18-a-hundred-megabyte-mp4/</guid>
+      <description>这站从第一行代码到能在 zanecody.cn 打开，中间那些具体的麻烦：一个超出上限一兆的视频、构建时删不掉的文件、十分钟看不见的更新，和一张两小时还没签下来的证书。</description>
+      <pubDate>Sun, 18 Oct 2026 00:00:00 GMT</pubDate>
+      <category>建站</category>
+      <category>部署</category>
+      <category>Next.js</category>
+    </item>
+    <item>
       <title>手感：一套动效参数表和三次翻车记录</title>
       <link>https://zanecody.cn/posts/2026-10-18-touch-and-feel/</link>
       <guid isPermaLink="true">https://zanecody.cn/posts/2026-10-18-touch-and-feel/</guid>
